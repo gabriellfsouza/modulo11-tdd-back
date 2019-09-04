@@ -2,8 +2,8 @@ import request from 'supertest';
 import app from '../../src/app';
 import truncate from '../util/truncate';
 
-describe('User', () => {
-  beforeEach(async () => {
+describe('User', async () => {
+  beforeAll(async () => {
     await truncate();
   });
 

@@ -1,12 +1,12 @@
 import request from 'supertest';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import app from '../../src/app';
 
 import User from '../../src/app/models/User';
 import truncate from '../util/truncate';
 
-describe('User', async () => {
-  beforeAll(async () => {
+describe('User', () => {
+  beforeEach(async () => {
     await truncate();
   });
 
@@ -28,19 +28,25 @@ describe('User', async () => {
       .send({
         name: 'Gabriel Lima',
         email: 'gabriellfsouza@gmail.com',
-        password_hash: '123456',
+        password: '123456',
       });
 
     expect(response.body).toHaveProperty('id');
   });
 
   it('should not be able to register with duplicated email', async () => {
+    await User.create({
+      name: 'Gabriel Lima',
+      email: 'gabriellfsouza@gmail.com',
+      password_hash: '123456',
+    });
+
     const response = await request(app)
       .post('/users')
       .send({
         name: 'Gabriel Lima',
         email: 'gabriellfsouza@gmail.com',
-        password_hash: '123456',
+        password: '123456',
       });
 
     expect(response.status).toBe(400);
